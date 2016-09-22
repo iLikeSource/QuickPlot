@@ -5,39 +5,19 @@ open XPlot.GoogleCharts
 
 module ScatterLine = 
 
-    type scatterOptions = 
-        { lineWidth  : int 
-          pointShape : string
-          pointSize  : int }
-    with static member create () = 
-            { lineWidth  = 1
-              pointShape = "circle" 
-              pointSize  = 3 }
-         member __.ChartOptions () =
-            let options = new Options(lineWidth  = __.lineWidth, 
-                                      pointShape = __.pointShape,
-                                      pointSize  = __.pointSize)
-            options
 
     type config = 
         { dataSourceId : int
           xValueColumn : int
           yValueColumn : int
           xValueHeader : string option
-          yValueHeader : string option
-          options      : scatterOptions }
+          yValueHeader : string option }
     with static member create (dataSourceId, xValueColumn, yValueColumn) = 
             { dataSourceId = dataSourceId
               xValueColumn = xValueColumn
               yValueColumn = yValueColumn
               xValueHeader = None 
-              yValueHeader = None 
-              options      = scatterOptions.create() }
-    
-    let withOptions () = 
-        let options = new Options()
-
-        options
+              yValueHeader = None }
 
     let fromSource (config:config) (sources:DataSources.DataSources.t) = 
         let data =
@@ -51,14 +31,7 @@ module ScatterLine =
                 else
                     None
             )
-        (data, config.options) 
-
-    let drawFromCsv  (config:config) (sources:DataSources.DataSources.t) = 
-        let (data, options) = fromSource config sources
-        (Chart.Line(data)
-         |> Chart.WithWidth  400
-         |> Chart.WithHeight 400
-         |> Chart.WithOptions (options.ChartOptions())).Html        
+        data 
 
     let sample () = 
         Chart.Line([ (0.0, 0.0); (1.0, 1.5); (2.0, -2.0); (3.0, 4.0) ])
@@ -69,5 +42,12 @@ module ScatterLines =
     
     type t = ScatterLine.config array    
     
+
+    let draw (lineConfigs:t) (sources:DataSources.DataSources.t) = 
+        (lineConfigs
+         |> Array.map (fun config -> ScatterLine.fromSource config sources)
+         |> Chart.Line    
+         |> Chart.WithWidth  400
+         |> Chart.WithHeight 400).Html        
 
 
