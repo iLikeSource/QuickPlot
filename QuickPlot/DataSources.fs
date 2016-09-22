@@ -45,5 +45,7 @@ module Csv =
 
 module DataSources = 
     
-    type t = 
-        { csvSources : (Csv.config * Csv.config) array }
+
+    type t = Csv.config array
+    
+     

@@ -30,8 +30,10 @@ namespace QuickPlotApp
 
         public void Init()
         {
+            var config = new QuickPlot.DataSources.Csv.config[] { QuickPlot.DataSources.Csv.config.create("../../sample.csv") };
+            var scatterLine = QuickPlot.ScatterLine.t.create(0, 1, 2);
             //this.browser.NavigateToString(QuickPlot.Scatter.sample());
-            var html = QuickPlot.ScatterLine.drawFromCsv(QuickPlot.DataSources.Csv.config.create("../../sample.csv"));
+            var html = QuickPlot.ScatterLine.drawFromCsv(scatterLine, config);
             this.browser.NavigateToString(html);
         }
 

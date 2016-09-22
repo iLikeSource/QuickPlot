@@ -20,17 +20,29 @@ module ScatterLine =
             options
 
     type t = 
-        { dataSource : (float * float) array
-          options    : scatterOptions }
+        { dataSourceId : int
+          xValueColumn : int
+          yValueColumn : int
+          xValueHeader : string option
+          yValueHeader : string option
+          options      : scatterOptions }
+    with static member create (dataSourceId, xValueColumn, yValueColumn) = 
+            { dataSourceId = dataSourceId
+              xValueColumn = xValueColumn
+              yValueColumn = yValueColumn
+              xValueHeader = None 
+              yValueHeader = None 
+              options      = scatterOptions.create() }
     
     let withOptions () = 
         let options = new Options()
 
         options
 
-    let fromCsv (readerConfig) = 
-        let dataSource =
-            DataSources.Csv.fromFile (readerConfig)
+    let fromSource (t:t) (sources:DataSources.DataSources.t) = 
+        let data =
+            let config = sources.[t.dataSourceId]
+            DataSources.Csv.fromFile (config)
             |> Array.choose (fun lineData -> 
                 let (xRef, yRef) = (ref 0.0, ref 0.0)
                 if System.Double.TryParse(lineData.[0], xRef) &&    
@@ -39,14 +51,14 @@ module ScatterLine =
                 else
                     None
             )
-        { dataSource = dataSource; options = scatterOptions.create() }
+        (data, t.options) 
 
-    let drawFromCsv  (readerConfig) = 
-        let data = fromCsv (readerConfig) 
-        (Chart.Line(data.dataSource)
+    let drawFromCsv  (t:t) (sources:DataSources.DataSources.t) = 
+        let (data, options) = fromSource t sources
+        (Chart.Line(data)
          |> Chart.WithWidth  400
          |> Chart.WithHeight 400
-         |> Chart.WithOptions (data.options.ChartOptions())).Html        
+         |> Chart.WithOptions (options.ChartOptions())).Html        
 
     let sample () = 
         Chart.Line([ (0.0, 0.0); (1.0, 1.5); (2.0, -2.0); (3.0, 4.0) ])
