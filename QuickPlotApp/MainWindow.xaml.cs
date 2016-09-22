@@ -31,12 +31,8 @@ namespace QuickPlotApp
         public void Init()
         {
             //this.browser.NavigateToString(QuickPlot.Scatter.sample());
-            var html = QuickPlot.Scatter.drawFromCsv("../../sample.csv");
+            var html = QuickPlot.Scatter.drawFromCsv(QuickPlot.Utilities.csvReaderConfig.create("../../sample.csv"));
             this.browser.NavigateToString(html);
-
-            var writer = new System.IO.StreamWriter("../../sample.html");
-            writer.Write(html);
-            writer.Close();
         }
 
         private void ScreenShot()

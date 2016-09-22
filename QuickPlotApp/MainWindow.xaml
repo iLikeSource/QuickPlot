@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuickPlotApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800">
-    <Grid>
+        Title="MainWindow" Height="600" Width="450">
+    <Grid Margin="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="8*"></RowDefinition>    
             <RowDefinition Height="2*"></RowDefinition>    
+            <RowDefinition Height="1*"></RowDefinition>    
         </Grid.RowDefinitions>
         <WebBrowser Name="browser" Grid.Row="0" HorizontalAlignment="Center" Height="Auto" Margin="0,0,0,0" VerticalAlignment="Center" Width="Auto" KeyDown="browser_KeyDown"/>
         <TextBox x:Name="textBox" Grid.Row="1" HorizontalAlignment="Stretch" Height="Auto" Margin="0,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Width="Auto"/>
