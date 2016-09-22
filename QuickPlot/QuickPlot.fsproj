@@ -51,7 +51,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="DataSources.fs" />
-    <Compile Include="Scatter.fs" />
+    <Compile Include="ScatterLine.fs" />
     <Compile Include="AssemblyInfo.fs" />
     <Content Include="packages.config" />
     <Content Include="Google.DataTable.Net.Wrapper.XML" />
