@@ -42,27 +42,29 @@ module Scatter =
     type t = 
         { dataSource : (float * float) array
           options    : graphOptions }
-        with
-        static member fromCsv (xColumn, yColumn) (path) = 
-            let dataSource =
-                Utilities.fromCsv [| xColumn; yColumn |] <| path
-                |> Array.choose (fun lineData -> 
-                    let (xRef, yRef) = (ref 0.0, ref 0.0)
-                    if System.Double.TryParse(lineData.[0], xRef) &&    
-                       System.Double.TryParse(lineData.[1], yRef) then
-                        Some (!xRef, !yRef)    
-                    else
-                        None
-                )
-            { dataSource = dataSource; options= { title = "Title" } }
+    
+    let fromCsv (xColumn, yColumn) (path) = 
+        let dataSource =
+            Utilities.fromCsv [| xColumn; yColumn |] <| path
+            |> Array.choose (fun lineData -> 
+                let (xRef, yRef) = (ref 0.0, ref 0.0)
+                if System.Double.TryParse(lineData.[0], xRef) &&    
+                   System.Double.TryParse(lineData.[1], yRef) then
+                    Some (!xRef, !yRef)    
+                else
+                    None
+            )
+        { dataSource = dataSource; options= { title = "Title" } }
 
     let drawFromCsv (path) = 
-        let data = t.fromCsv (1, 2) path
-        Chart.Line(data.dataSource).Html
+        let data = fromCsv (1, 2) path
+        (Chart.Line(data.dataSource)
+         |> Chart.WithWidth  400
+         |> Chart.WithHeight 400).Html        
 
     let sample () = 
         Chart.Line([ (0.0, 0.0); (1.0, 1.5); (2.0, -2.0); (3.0, 4.0) ])
-             .InlineHtml    
+             .Html    
 
 
     
