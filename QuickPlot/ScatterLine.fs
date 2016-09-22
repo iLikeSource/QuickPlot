@@ -19,7 +19,7 @@ module ScatterLine =
                                       pointSize  = __.pointSize)
             options
 
-    type t = 
+    type config = 
         { dataSourceId : int
           xValueColumn : int
           yValueColumn : int
@@ -39,9 +39,9 @@ module ScatterLine =
 
         options
 
-    let fromSource (t:t) (sources:DataSources.DataSources.t) = 
+    let fromSource (config:config) (sources:DataSources.DataSources.t) = 
         let data =
-            let config = sources.[t.dataSourceId]
+            let config = sources.[config.dataSourceId]
             DataSources.Csv.fromFile (config)
             |> Array.choose (fun lineData -> 
                 let (xRef, yRef) = (ref 0.0, ref 0.0)
@@ -51,10 +51,10 @@ module ScatterLine =
                 else
                     None
             )
-        (data, t.options) 
+        (data, config.options) 
 
-    let drawFromCsv  (t:t) (sources:DataSources.DataSources.t) = 
-        let (data, options) = fromSource t sources
+    let drawFromCsv  (config:config) (sources:DataSources.DataSources.t) = 
+        let (data, options) = fromSource config sources
         (Chart.Line(data)
          |> Chart.WithWidth  400
          |> Chart.WithHeight 400
@@ -65,7 +65,9 @@ module ScatterLine =
              .Html    
 
 
+module ScatterLines = 
     
+    type t = ScatterLine.config array    
     
 
 

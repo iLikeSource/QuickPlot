@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="DataSources.fs" />
     <Compile Include="ScatterLine.fs" />
+    <Compile Include="Model.fs" />
     <Compile Include="AssemblyInfo.fs" />
     <Content Include="packages.config" />
     <Content Include="Google.DataTable.Net.Wrapper.XML" />
