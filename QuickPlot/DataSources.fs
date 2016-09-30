@@ -47,5 +47,8 @@ module DataSources =
     
 
     type t = Csv.config array
+
+    let toJson(t:t) = Newtonsoft.Json.JsonConvert.SerializeObject(t)
+
     
      
