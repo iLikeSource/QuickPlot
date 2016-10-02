@@ -1,35 +1,68 @@
 ﻿namespace QuickPlot
 
+open FSharp.Configuration
 open Newtonsoft.Json
-open QuickPlot.DataSources
+
+type tYaml = YamlConfig<"Model.yaml">
+
+module DataSources = 
+    
+    let addCsvFile (t:tYaml) (csvPath:string) =
+        let (xValueColumn, yValueColumn) = (1, 2)
+        let dataSource =
+            tYaml.DataSources_Item_Type(filePath    = csvPath, 
+                                        columns     = new ResizeArray<int>([1; 2]),
+                                        skipRows    = 1,
+                                        headerAlias = true)
+        let series = 
+            tYaml.Series_Item_Type(dataSource   = csvPath,
+                                   xValueColumn = xValueColumn,
+                                   yValueColumn = yValueColumn)
+        t.DataSources.Add (dataSource)
+        t.Series.Add (series)
+        t
+
+    let read (dataSource:tYaml.DataSources_Item_Type) =
+        use reader     = new System.IO.StreamReader(dataSource.filePath)
+        let skipRows   = dataSource.skipRows
+        
+        //  Csv読み込み関数
+        let rec readCsv 
+            (reader:System.IO.StreamReader) 
+            (dst:string array list) =
+            if reader.EndOfStream then 
+                let values = dst |> List.rev |> Array.ofList
+                Array.sub values skipRows (values.Length - skipRows)
+            else
+                let currentData = 
+                    reader.ReadLine().Split([| ',' |]) 
+                    |> Array.map (fun s -> s.Trim())
+                let targetData  = 
+                    dataSource.columns 
+                    |> Array.ofSeq 
+                    |> Array.map (fun column -> 
+                        if column <= currentData.Length then 
+                            currentData.[column - 1]
+                        else
+                            ""
+                    )
+                List.Cons (currentData, dst)
+                |> readCsv (reader)
+        readCsv reader []
+
 
 module Model = 
-    type t = 
-        { dataSources : DataSources.t 
-          series      : ScatterLines.t }
-    with 
-    member this.pushDataSource(dataSource:Csv.config) =
-        { this with dataSources = Array.append this.dataSources [| dataSource |] }
-              
-    member this.pushSeries(scatterLine:ScatterLine.config) = 
-        let line = 
-            let lastIndex  = this.dataSources.Length - 1
-            let dataSource = this.dataSources.[lastIndex]
-            ScatterLine.config.create(dataSourceId=lastIndex, 
-                                      xValueColumn=dataSource.readColumns.[0], 
-                                      yValueColumn=dataSource.readColumns.[1])
-        { this with series = Array.append this.series [| scatterLine |] }
 
-    member this.draw() = 
-        ScatterLines.draw this.series this.dataSources
-    
-    static member empty() = { dataSources = [||]; series = [||] }
-    
-    static member fromFile(path:string) = 
-        t.empty().pushDataSource(Csv.config.create(path))
-                 .pushSeries(ScatterLine.config.create(dataSourceId=0, xValueColumn=1, yValueColumn=2))
+    let empty () : tYaml = 
+        tYaml(DataSources = new ResizeArray<tYaml.DataSources_Item_Type>(),
+              Series      = new ResizeArray<tYaml.Series_Item_Type>())
 
-    static member fromString(s:string) = 
-        t.empty().pushDataSource(JsonConvert.DeserializeObject<Csv.config>(s))
-                 .pushSeries(ScatterLine.config.create(dataSourceId=0, xValueColumn=1, yValueColumn=2))
-        
+    let fromString (s:string) = 
+        let x = tYaml()
+        x.LoadText(s)
+        x
+
+    let toString (t:tYaml) = 
+        t.ToString()
+
+

@@ -1,5 +1,6 @@
 ﻿namespace QuickPlot
 
+open System.Collections.Generic
 open XPlot.GoogleCharts
 
 
@@ -19,10 +20,9 @@ module ScatterLine =
               xValueHeader = None 
               yValueHeader = None }
 
-    let fromSource (config:config) (sources:DataSources.DataSources.t) = 
+    let fromSource (dataSource:tYaml.DataSources_Item_Type) = 
         let data =
-            let config = sources.[config.dataSourceId]
-            DataSources.Csv.fromFile (config)
+            DataSources.read (dataSource)
             |> Array.choose (fun lineData -> 
                 let (xRef, yRef) = (ref 0.0, ref 0.0)
                 if System.Double.TryParse(lineData.[0], xRef) &&    
@@ -43,9 +43,10 @@ module ScatterLines =
     type t = ScatterLine.config array    
     
 
-    let draw (lineConfigs:t) (sources:DataSources.DataSources.t) = 
-        (lineConfigs
-         |> Array.map (fun config -> ScatterLine.fromSource config sources)
+    let draw (dataSources:IList<tYaml.DataSources_Item_Type>) = 
+        (dataSources
+         |> Array.ofSeq
+         |> Array.map (fun dataSource -> ScatterLine.fromSource (dataSource))
          |> Chart.Line    
          |> Chart.WithWidth  400
          |> Chart.WithHeight 400).Html        

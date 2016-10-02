@@ -107,9 +107,11 @@ namespace QuickPlotApp
                 if (files.Length > 0)
                 {
                     // 現状では最初のファイルのみ
-                    var model = QuickPlot.Model.t.fromFile(files[0]);
-                    var html = model.draw();
-                    this.textBox.Text = QuickPlot.DataSources.DataSources.toJson(model.dataSources);
+                    var model = QuickPlot.DataSources.addCsvFile(QuickPlot.Model.empty(), files[0]);
+                    var dataSource = model.DataSources[0];
+                    var lineConfigs = QuickPlot.ScatterLine.fromSource(dataSource);
+                    var html = QuickPlot.ScatterLines.draw(model.DataSources); 
+                    this.textBox.Text = QuickPlot.Model.toString(model);
                     this.browser.NavigateToString(html);
                 }
             }
@@ -144,8 +146,8 @@ namespace QuickPlotApp
                     {
                         //try
                         //{
-                            var model = QuickPlot.Model.t.fromString(textBox.Text);
-                            var html  = model.draw();
+                            var model = QuickPlot.Model.fromString(textBox.Text);
+                            var html  = QuickPlot.ScatterLines.draw(model.DataSources);
                             this.browser.NavigateToString(html);
                         //}
                         //catch
