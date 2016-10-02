@@ -78,16 +78,16 @@ namespace QuickPlotApp
             }
         } 
 
-        private void browser_KeyDown(object sender, KeyEventArgs e)
+        private void window_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
             {
                 case Key.C:
-                    //if((Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None)
-                    //{
+                    if((Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None)
+                    {
                         // Ctrl+C
                         ScreenShot();
-                    //}
+                    }
                     break;
                 default:
                     break;
@@ -102,8 +102,10 @@ namespace QuickPlotApp
         private void Window_Drop(object sender, DragEventArgs e)
         {
             string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if ( files != null ) {
-                if(files.Length > 0 ) {
+            if (files != null)
+            {
+                if (files.Length > 0)
+                {
                     // 現状では最初のファイルのみ
                     var model = QuickPlot.Model.t.fromFile(files[0]);
                     var html = model.draw();
@@ -126,6 +128,35 @@ namespace QuickPlotApp
                 e.Effects = DragDropEffects.None;
             }
             e.Handled = true;
+        }
+
+        /// <summary>
+        /// テキストボックスのキーイベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void textBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Enter:
+                    if((Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None)
+                    {
+                        //try
+                        //{
+                            var model = QuickPlot.Model.t.fromString(textBox.Text);
+                            var html  = model.draw();
+                            this.browser.NavigateToString(html);
+                        //}
+                        //catch
+                        //{
+
+                        //}
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

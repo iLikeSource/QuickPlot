@@ -8,14 +8,15 @@
         PreviewDragOver="Window_PreviewDragOver"
         Drop="Window_Drop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="450">
+        Title="MainWindow" Height="600" Width="450"
+        KeyDown="window_KeyDown" >
     <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"></RowDefinition>    
             <RowDefinition Height="1*"></RowDefinition>    
         </Grid.RowDefinitions>
-        <WebBrowser Name="browser" Grid.Row="0" HorizontalAlignment="Center" Height="Auto" Margin="0,0,0,0" VerticalAlignment="Center" Width="Auto" KeyDown="browser_KeyDown"/>
-        <TextBox x:Name="textBox" Grid.Row="1" HorizontalAlignment="Stretch" Height="Auto" Margin="0,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Width="Auto"/>
+        <WebBrowser Name="browser" Grid.Row="0" HorizontalAlignment="Center" Height="Auto" Margin="0,0,0,0" VerticalAlignment="Center" Width="Auto" />
+        <TextBox x:Name="textBox" Grid.Row="1" HorizontalAlignment="Stretch" Height="Auto" Margin="0,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Width="Auto" KeyUp="textBox_KeyUp"/>
     </Grid>
     
 </Window>
