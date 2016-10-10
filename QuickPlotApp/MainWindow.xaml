@@ -16,7 +16,7 @@
             <RowDefinition Height="1*"></RowDefinition>    
         </Grid.RowDefinitions>
         <WebBrowser Name="browser" Grid.Row="0" HorizontalAlignment="Center" Height="Auto" Margin="0,0,0,0" VerticalAlignment="Center" Width="Auto" />
-        <TextBox x:Name="textBox" Grid.Row="1" HorizontalAlignment="Stretch" Height="Auto" Margin="0,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Width="Auto" KeyUp="textBox_KeyUp"/>
+        <TextBox x:Name="textBox" Grid.Row="1" HorizontalAlignment="Stretch" Height="Auto" Margin="0,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Width="Auto" AcceptsReturn="True" AcceptsTab="True" KeyUp="textBox_KeyUp"/>
     </Grid>
     
 </Window>

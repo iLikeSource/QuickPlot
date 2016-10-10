@@ -142,13 +142,13 @@ namespace QuickPlotApp
             switch (e.Key)
             {
                 case Key.Enter:
-                    if((Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None)
+                    if ((Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None)
                     {
                         //try
                         //{
-                            var model = QuickPlot.Model.fromString(textBox.Text);
-                            var html  = QuickPlot.ScatterLines.draw(model.DataSources);
-                            this.browser.NavigateToString(html);
+                        var model = QuickPlot.Model.fromString(textBox.Text);
+                        var html = QuickPlot.ScatterLines.draw(model.DataSources);
+                        this.browser.NavigateToString(html);
                         //}
                         //catch
                         //{
